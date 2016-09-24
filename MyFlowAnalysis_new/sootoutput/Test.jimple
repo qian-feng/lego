@@ -1,0 +1,74 @@
+public class Test extends java.lang.Object
+{
+
+    public void <init>()
+    {
+        Test r0;
+
+        r0 := @this: Test;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static void print1(java.lang.String)
+    {
+        java.lang.String r0;
+        java.io.PrintStream $r1;
+
+        r0 := @parameter0: java.lang.String;
+
+        $r1 = <java.lang.System: java.io.PrintStream out>;
+
+        virtualinvoke $r1.<java.io.PrintStream: void println(java.lang.String)>(r0);
+
+        return;
+    }
+
+    public static void print2(java.lang.String)
+    {
+        java.lang.String r0;
+        java.io.PrintStream $r1;
+
+        r0 := @parameter0: java.lang.String;
+
+        $r1 = <java.lang.System: java.io.PrintStream out>;
+
+        virtualinvoke $r1.<java.io.PrintStream: void println(java.lang.String)>(r0);
+
+        return;
+    }
+
+    public static void main(java.lang.String[])
+    {
+        java.lang.String[] r0;
+        byte b0;
+        java.lang.String r1, r2;
+        java.io.PrintStream $r3;
+
+        r0 := @parameter0: java.lang.String[];
+
+        b0 = 3;
+
+        r1 = "a";
+
+        r2 = "b";
+
+        if b0 <= 2 goto label1;
+
+        staticinvoke <Test: void print1(java.lang.String)>(r1);
+
+        goto label2;
+
+     label1:
+        staticinvoke <Test: void print2(java.lang.String)>(r2);
+
+     label2:
+        $r3 = <java.lang.System: java.io.PrintStream out>;
+
+        virtualinvoke $r3.<java.io.PrintStream: void println(java.lang.String)>("the end");
+
+        return;
+    }
+}

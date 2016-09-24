@@ -1,0 +1,46 @@
+class LineFollower$1 extends java.lang.Object implements lejos.hardware.KeyListener
+{
+    final LineFollower this$0;
+
+    void <init>(LineFollower)
+    {
+        LineFollower$1 r0;
+        LineFollower r1;
+
+        r0 := @this: LineFollower$1;
+
+        r1 := @parameter0: LineFollower;
+
+        r0.<LineFollower$1: LineFollower this$0> = r1;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public void keyPressed(lejos.hardware.Key)
+    {
+        LineFollower$1 r0;
+        lejos.hardware.Key r1;
+
+        r0 := @this: LineFollower$1;
+
+        r1 := @parameter0: lejos.hardware.Key;
+
+        return;
+    }
+
+    public void keyReleased(lejos.hardware.Key)
+    {
+        LineFollower$1 r0;
+        lejos.hardware.Key r1;
+
+        r0 := @this: LineFollower$1;
+
+        r1 := @parameter0: lejos.hardware.Key;
+
+        staticinvoke <java.lang.System: void exit(int)>(0);
+
+        return;
+    }
+}

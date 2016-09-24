@@ -1,0 +1,225 @@
+public class LineFollower extends java.lang.Object
+{
+    private lejos.hardware.ev3.EV3 brick;
+    private lejos.hardware.sensor.EV3ColorSensor cSensor;
+    private lejos.robotics.EncoderMotor l;
+    private lejos.robotics.EncoderMotor r;
+
+    public static void main(java.lang.String[])
+    {
+        java.lang.String[] r0;
+        LineFollower r1, $r2;
+        lejos.hardware.ev3.EV3 $r3;
+
+        r0 := @parameter0: java.lang.String[];
+
+        $r2 = new LineFollower;
+
+        $r3 = staticinvoke <lejos.hardware.ev3.LocalEV3: lejos.hardware.ev3.EV3 get()>();
+
+        specialinvoke $r2.<LineFollower: void <init>(lejos.hardware.ev3.EV3,java.lang.String,java.lang.String,java.lang.String)>($r3, "A", "D", "S2");
+
+        r1 = $r2;
+
+        specialinvoke r1.<LineFollower: void go()>();
+
+        return;
+    }
+
+    public void <init>(lejos.hardware.ev3.EV3, java.lang.String, java.lang.String, java.lang.String)
+    {
+        LineFollower r0;
+        lejos.hardware.ev3.EV3 r1, $r5, $r13;
+        java.lang.String r2, r3, r4;
+        lejos.hardware.Key $r6;
+        LineFollower$1 $r7;
+        lejos.hardware.motor.UnregulatedMotor $r8, $r10;
+        lejos.hardware.port.Port $r9, $r11, $r14;
+        lejos.hardware.sensor.EV3ColorSensor $r12;
+
+        r0 := @this: LineFollower;
+
+        r1 := @parameter0: lejos.hardware.ev3.EV3;
+
+        r2 := @parameter1: java.lang.String;
+
+        r3 := @parameter2: java.lang.String;
+
+        r4 := @parameter3: java.lang.String;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<LineFollower: lejos.hardware.ev3.EV3 brick> = r1;
+
+        $r5 = r0.<LineFollower: lejos.hardware.ev3.EV3 brick>;
+
+        $r6 = interfaceinvoke $r5.<lejos.hardware.ev3.EV3: lejos.hardware.Key getKey(java.lang.String)>("Escape");
+
+        $r7 = new LineFollower$1;
+
+        specialinvoke $r7.<LineFollower$1: void <init>(LineFollower)>(r0);
+
+        interfaceinvoke $r6.<lejos.hardware.Key: void addKeyListener(lejos.hardware.KeyListener)>($r7);
+
+        $r8 = new lejos.hardware.motor.UnregulatedMotor;
+
+        $r9 = <lejos.hardware.port.MotorPort: lejos.hardware.port.Port A>;
+
+        specialinvoke $r8.<lejos.hardware.motor.UnregulatedMotor: void <init>(lejos.hardware.port.Port)>($r9);
+
+        r0.<LineFollower: lejos.robotics.EncoderMotor l> = $r8;
+
+        $r10 = new lejos.hardware.motor.UnregulatedMotor;
+
+        $r11 = <lejos.hardware.port.MotorPort: lejos.hardware.port.Port D>;
+
+        specialinvoke $r10.<lejos.hardware.motor.UnregulatedMotor: void <init>(lejos.hardware.port.Port)>($r11);
+
+        r0.<LineFollower: lejos.robotics.EncoderMotor r> = $r10;
+
+        $r12 = new lejos.hardware.sensor.EV3ColorSensor;
+
+        $r13 = r0.<LineFollower: lejos.hardware.ev3.EV3 brick>;
+
+        $r14 = interfaceinvoke $r13.<lejos.hardware.ev3.EV3: lejos.hardware.port.Port getPort(java.lang.String)>(r4);
+
+        specialinvoke $r12.<lejos.hardware.sensor.EV3ColorSensor: void <init>(lejos.hardware.port.Port)>($r14);
+
+        r0.<LineFollower: lejos.hardware.sensor.EV3ColorSensor cSensor> = $r12;
+
+        return;
+    }
+
+    private void go()
+    {
+        LineFollower r0;
+        float[] r1, r2;
+        lejos.hardware.sensor.SensorMode r3;
+        double d0, $d1, $d2, $d3, $d4, $d5;
+        lejos.hardware.sensor.EV3ColorSensor $r4;
+        long $l0, $l1;
+        byte $b2, $b3;
+        float $f0, $f1, $f2;
+
+        r0 := @this: LineFollower;
+
+        r1 = newarray (float)[1];
+
+        r2 = newarray (float)[1];
+
+        $r4 = r0.<LineFollower: lejos.hardware.sensor.EV3ColorSensor cSensor>;
+
+        r3 = virtualinvoke $r4.<lejos.hardware.sensor.EV3ColorSensor: lejos.hardware.sensor.SensorMode getRedMode()>();
+
+        staticinvoke <lejos.hardware.Sound: void beepSequenceUp()>();
+
+        $l0 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+
+        d0 = (double) $l0;
+
+        goto label3;
+
+     label1:
+        interfaceinvoke r3.<lejos.robotics.SampleProvider: void fetchSample(float[],int)>(r1, 0);
+
+        $f0 = r1[0];
+
+        $d3 = (double) $f0;
+
+        $b3 = $d3 cmpl 0.2;
+
+        if $b3 <= 0 goto label2;
+
+        $f2 = r1[0];
+
+        $d5 = (double) $f2;
+
+        virtualinvoke r0.<LineFollower: void turnL(double)>($d5);
+
+        goto label3;
+
+     label2:
+        $f1 = r1[0];
+
+        $d4 = (double) $f1;
+
+        virtualinvoke r0.<LineFollower: void turnR(double)>($d4);
+
+     label3:
+        $l1 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+
+        $d1 = (double) $l1;
+
+        $d2 = $d1 - d0;
+
+        $b2 = $d2 cmpg 10000.0;
+
+        if $b2 < 0 goto label1;
+
+        return;
+    }
+
+    public void turnL(double)
+    {
+        LineFollower r0;
+        lejos.robotics.EncoderMotor $r1, $r2;
+        double $d0, $d1, d2, d3;
+        int $i0;
+
+        r0 := @this: LineFollower;
+
+        d2 := @parameter0: double;
+
+        d3 = d2 - 0.2;
+
+        $r1 = r0.<LineFollower: lejos.robotics.EncoderMotor r>;
+
+        interfaceinvoke $r1.<lejos.robotics.EncoderMotor: void setPower(int)>(40);
+
+        $r2 = r0.<LineFollower: lejos.robotics.EncoderMotor l>;
+
+        $d0 = 400.0 * d3;
+
+        $d1 = 40.0 - $d0;
+
+        $i0 = (int) $d1;
+
+        interfaceinvoke $r2.<lejos.robotics.EncoderMotor: void setPower(int)>($i0);
+
+        staticinvoke <lejos.utility.Delay: void msDelay(long)>(10L);
+
+        return;
+    }
+
+    public void turnR(double)
+    {
+        LineFollower r0;
+        double $d0, $d1, d2, d3;
+        int $i0;
+        lejos.robotics.EncoderMotor $r1, $r2;
+
+        r0 := @this: LineFollower;
+
+        d2 := @parameter0: double;
+
+        d3 = 0.2 - d2;
+
+        $r1 = r0.<LineFollower: lejos.robotics.EncoderMotor r>;
+
+        $d0 = 400.0 * d3;
+
+        $d1 = 40.0 - $d0;
+
+        $i0 = (int) $d1;
+
+        interfaceinvoke $r1.<lejos.robotics.EncoderMotor: void setPower(int)>($i0);
+
+        $r2 = r0.<LineFollower: lejos.robotics.EncoderMotor l>;
+
+        interfaceinvoke $r2.<lejos.robotics.EncoderMotor: void setPower(int)>(40);
+
+        staticinvoke <lejos.utility.Delay: void msDelay(long)>(10L);
+
+        return;
+    }
+}
