@@ -188,10 +188,10 @@ public class AnalyzerMain {
 	public static String currAnalysisNodeSig = "";
 	
 	public static List<List<Stmt>> paths = new ArrayList<List<Stmt>>();
-	public static String source = "<lejos.robotics.SampleProvider: void fetchSample(float[],int)>";
-	public static String sink = "<lejos.robotics.EncoderMotor: void setPower(int)>";
-	//public static String sink = "<test: boolean inBounds(int,int)>";
-	//public static String source = "<test: int get()>";
+	//public static String source = "<lejos.robotics.SampleProvider: void fetchSample(float[],int)>";
+	//public static String sink = "<lejos.robotics.EncoderMotor: void setPower(int)>";
+	public static String sink = "<test: boolean inBounds(int,int)>";
+	public static String source = "<test: int get()>";
 	
 	public static void main(String[] args) {
 		File directory = new File(".");
