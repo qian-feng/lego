@@ -404,8 +404,9 @@ public interface MyConstants {
 		
 		//"<LineFollower: void turnL(double)>",
 		//"<LineFollower: void turnR(double)>",
-		//Add lejos sensitive API
-			
+		// Add SINK API below
+		// conditionAnalysis will be conducted towards this list
+		"<test: boolean inBounds(int,int)>",		
 		"<lejos.robotics.EncoderMotor: void setPower(int)>",
 		"<lejos.robotics.SampleProvider: void fetchSample(float[],int)>",
 		//cell phone info query
