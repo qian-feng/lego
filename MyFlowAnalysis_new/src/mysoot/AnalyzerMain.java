@@ -188,10 +188,11 @@ public class AnalyzerMain {
 	public static String currAnalysisNodeSig = "";
 	
 	public static List<List<Stmt>> paths = new ArrayList<List<Stmt>>();
-	public static String source = "<lejos.robotics.SampleProvider: void fetchSample(float[],int)>";
-	public static String sink = "<lejos.robotics.EncoderMotor: void setPower(int)>";
-	//public static String sink = "<test: boolean inBounds(int,int)>";
-	//public static String source = "<test: int get()>";
+	//public static String source = "<lejos.robotics.SampleProvider: void fetchSample(float[],int)>";
+	//public static String sink = "<lejos.robotics.EncoderMotor: void setPower(int)>";
+	// sink and source are used to locate data flow paths within raw output
+	public static String sink = "<test: boolean inBounds(int,int)>";
+	public static String source = "<test: int get()>";
 	
 	public static void main(String[] args) {
 		File directory = new File(".");
@@ -242,7 +243,7 @@ public class AnalyzerMain {
 		sootArgs.add("-output-format");
 		sootArgs.add("jimple");
 		sootArgs.add("-process-dir");
-		sootArgs.add("../LineFollower/bin");
+		sootArgs.add("../test/bin");
 		//sootArgs.add("../PetriNet/bin");
 		sootArgs.add("-allow-phantom-refs");
 		sootArgs.add("-w");
@@ -885,7 +886,7 @@ public class AnalyzerMain {
 		sootArgs.add("-output-format");
 		sootArgs.add("jimple");
 		sootArgs.add("-process-dir");
-		sootArgs.add("../LineFollower/bin");
+		sootArgs.add("../test/bin");
 		sootArgs.add("-allow-phantom-refs");
 		sootArgs.add("-w");
 		String[] soot_args = new String[sootArgs.size()];
@@ -955,7 +956,7 @@ public class AnalyzerMain {
 		sootArgs.add("-output-format");
 		sootArgs.add("jimple");
 		sootArgs.add("-process-dir");
-		sootArgs.add("../LineFollower/bin");
+		sootArgs.add("../test/bin");		
 		sootArgs.add("-allow-phantom-refs");
 		// sootArgs.add("-w");
 		sootArgs.add("-O");
@@ -983,7 +984,7 @@ public class AnalyzerMain {
 		sootArgs.add("-output-format");
 		sootArgs.add("jimple");
 		sootArgs.add("-process-dir");
-		sootArgs.add("../LineFollower/bin");
+		sootArgs.add("../test/bin");		
 		sootArgs.add("-allow-phantom-refs");
 
 		String[] soot_args = new String[sootArgs.size()];
@@ -1027,7 +1028,7 @@ public class AnalyzerMain {
 		sootArgs.add("-output-format");
 		sootArgs.add("jimple");
 		sootArgs.add("-process-dir");
-		sootArgs.add("../LineFollower/bin");
+		sootArgs.add("../test/bin");
 		sootArgs.add("-allow-phantom-refs");
 		sootArgs.add("-w");
 
@@ -1055,7 +1056,7 @@ public class AnalyzerMain {
 		sootArgs.add("-output-format");
 		sootArgs.add("jimple");
 		sootArgs.add("-process-dir");
-		sootArgs.add("../LineFollower/bin");
+		sootArgs.add("../test/bin");
 		sootArgs.add("-allow-phantom-refs");
 		sootArgs.add("-w");
 
@@ -1084,7 +1085,7 @@ public class AnalyzerMain {
 		sootArgs.add("-output-format");
 		sootArgs.add("jimple");
 		sootArgs.add("-process-dir");
-		sootArgs.add("../LineFollower/bin");
+		sootArgs.add("../test/bin");
 		sootArgs.add("-allow-phantom-refs");
 		sootArgs.add("-w");
 
@@ -1110,13 +1111,15 @@ public class AnalyzerMain {
 		sootArgs.add("-output-format");
 		sootArgs.add("jimple");
 		sootArgs.add("-process-dir");
-		sootArgs.add("../LineFollower/bin");
+		sootArgs.add("../test/bin");
 		sootArgs.add("-allow-phantom-refs");
 		sootArgs.add("-w");
 		String[] soot_args = new String[sootArgs.size()];
 		for (int i = 0; i < sootArgs.size(); i++) {
 			soot_args[i] = sootArgs.get(i);
 		}
+		// each time when wen use soot.Main.main(soot_args) to analyze project, we need to 
+		// provide correct project location: "../test/bin" in this example
 		soot.Main.main(soot_args);
 	}
 
