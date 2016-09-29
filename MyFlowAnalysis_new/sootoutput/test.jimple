@@ -28,31 +28,40 @@ public class test extends java.lang.Object
         return 1;
     }
 
+    public static int get2()
+    {
+        return 1;
+    }
+
     public static void main(java.lang.String[])
     {
         java.lang.String[] r0;
-        byte b0;
-        int i1;
+        int i0;
+        byte b1;
 
         r0 := @parameter0: java.lang.String[];
 
-        i1 = staticinvoke <test: int get()>();
+        i0 = staticinvoke <test: int get()>();
 
-        b0 = 1;
+        b1 = 1;
 
-        if i1 > 0 goto label1;
+        if i0 <= 1 goto label1;
 
-        if i1 >= 0 goto label2;
+        staticinvoke <test: int get()>();
+
+        goto label2;
 
      label1:
-        i1 = 0;
+        if b1 <= 1 goto label2;
+
+        staticinvoke <test: int get2()>();
 
      label2:
-        if i1 != 1 goto label3;
+        if i0 != 1 goto label3;
 
-        if b0 != 1 goto label3;
+        if b1 != 1 goto label3;
 
-        staticinvoke <test: boolean inBounds(int,int)>(i1, b0);
+        staticinvoke <test: boolean inBounds(int,int)>(i0, b1);
 
      label3:
         return;

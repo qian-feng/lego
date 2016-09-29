@@ -5,7 +5,6 @@ import soot.jimple.*;
 import soot.toolkits.graph.*;
 import java.util.*;
 import mysoot.AnalyzerMain;
-
 public class APIGraph {
 	public static TaintTag API_TAG = new TaintTag(0xffff);
 	public static TaintTag FUNC_TAG = new TaintTag(0xfffe);
@@ -84,29 +83,29 @@ public class APIGraph {
 	//return all the conditional predecessors of 'node' in the graph
 	//conditional predecessors means predecessors that is inside a IF statement
 	//The return has to exclude the predecessors that can reach 'node' regardless of the condition e.g. for loop
-	public List<APIGraphNode> getConditionalPredecessors(APIGraphNode node)
+	public List<Predecessor> getConditionalPredecessors(APIGraphNode node)
 	{
 		//this LinkedList stores all the conditional predecessors to return
-		LinkedList<APIGraphNode> preDecessors = new LinkedList<APIGraphNode>();
+		LinkedList<Predecessor> preDecessors = new LinkedList<Predecessor>();
 		//this LinkedList stores all the predecessors to return
-		LinkedList<APIGraphNode> predAll = new LinkedList<APIGraphNode>();
+		LinkedList<Predecessor> predAll = new LinkedList<Predecessor>();
 		//this LinkedList stores all the predecessors in queue
-		LinkedList<APIGraphNode> preds = new LinkedList<APIGraphNode>();
+		LinkedList<Predecessor> preds = new LinkedList<Predecessor>();
 		
-		preds.addAll(node.getPredecessors());
+		preds.addAll(node.getPreds());
+		//preds.add(node);
 		//for(int i=0;i<node.getPredecessors().size();i++) System.out.println(node.getPredecessors().get(i).getStmt());
 		
 		predAll.addAll(preds);
+		//predAll.add(node);
 		
 		while(!preds.isEmpty())
 		{
-			APIGraphNode currNode = preds.remove();
-			//System.out.println("++++++++++++++");
-			//System.out.println(currNode.getStmt());
-			//System.out.println("++++++++++++++");
+			
+			Predecessor currNode = preds.remove();
 
 			//if this node is a conditional predecessor, add it to 'preDecessors'
-			Stmt s = currNode.getStmt();
+			Stmt s = currNode.pred_node.getStmt();
 			
 			if(s instanceof IfStmt)
 			{
@@ -122,13 +121,13 @@ public class APIGraph {
 			}
 
 			//This linkedList stores all the predecessors of current node 'currNode'
-			LinkedList<APIGraphNode> currPreds = new LinkedList<APIGraphNode>();
-			currPreds.addAll(currNode.getPredecessors());
+			LinkedList<Predecessor> currPreds = new LinkedList<Predecessor>();
+			currPreds.addAll(currNode.pred_node.getPreds());
 			//System.out.println(currNode.getPredecessors().get(0).getStmt());
 			
 			if(currPreds == null || currPreds.isEmpty()) continue;
 			
-			for (APIGraphNode n : currPreds)
+			for (Predecessor n : currPreds)
 			{
 				if(!predAll.contains(n))
 				{
@@ -138,16 +137,16 @@ public class APIGraph {
 			}
 		}
 		//System.out.println("size of predecessors: "+preDecessors.get(0).getStmt());
-		LinkedList<APIGraphNode> toExclude = new LinkedList<APIGraphNode>();
+		LinkedList<Predecessor> toExclude = new LinkedList<Predecessor>();
 		//exclude the predecessors that can reach 'node' regardless of the condition
-		for(APIGraphNode pred: preDecessors)
+		for(Predecessor pred: preDecessors)
 		{
 			//under the case that the statement is not if statement, just continue
 			//deal with the fact that some switch-case statement will only have one successor
-			if(!(pred.getStmt() instanceof IfStmt))
+			if(!(pred.pred_node.getStmt() instanceof IfStmt))
 				continue;
 			
-			Vector<APIGraphNode> succs = pred.getSuccessors();
+			Vector<APIGraphNode> succs = pred.pred_node.getSuccessors();
 			
 			//whether this pred is a real condition or not
 			//'pred' is a real condition only if not all its successors lead to 'node'
@@ -156,7 +155,7 @@ public class APIGraph {
 			//check if all its successors can reach 'node'
 			for(APIGraphNode succ: succs)
 			{
-				if(!succ.equal(node) && !succ.hasSuccRecursive(node))
+				if(!succ.equal(node) && !succ.hasSuccRecursive(node, pred.pred_node))
 				{
 					conditionless = false;
 					break;

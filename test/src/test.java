@@ -10,12 +10,22 @@ public class test
 		return 1;
 	}
 
+	public static int get2()
+	{
+		return 1;
+	}
+
 	public static void main(String[] args)
 	{	
 		int a = get();
 		int b = 1;
-		if(a>0 || a <0) a = 0;
-		if(a == 1 && b == 1) inBounds(a,b);
+		if(a>1) get();
+		else
+			if(b>1) 
+				get2();
+
+		if(a == 1 && b == 1) 
+			inBounds(a,b);
 		return;
 	}
 }

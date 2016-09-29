@@ -31,6 +31,7 @@ import soot.toolkits.graph.UnitGraph;
 import soot.util.Chain;
 import transformers.APIGraph;
 import transformers.APIGraphNode;
+import transformers.Predecessor;
 import transformers.AndroidSourceSinkSummary;
 import transformers.FindEntryPointsTransformer;
 import transformers.FindSourcesTransformer;
@@ -188,14 +189,14 @@ public class AnalyzerMain {
 	public static String currAnalysisNodeSig = "";
 	
 	public static List<List<Stmt>> paths = new ArrayList<List<Stmt>>();
-	public static String source = "<lejos.robotics.SampleProvider: void fetchSample(float[],int)>";
-	public static String sink = "<lejos.robotics.EncoderMotor: void setPower(int)>";
-	//public static String sink = "<test: boolean inBounds(int,int)>";
-	//public static String source = "<test: int get()>";
+	//public static String source = "<lejos.robotics.SampleProvider: void fetchSample(float[],int)>";
+	//public static String sink = "<lejos.robotics.EncoderMotor: void setPower(int)>";
+	public static String sink = "<test: boolean inBounds(int,int)>";
+	public static String source = "<test: int get()>";
 	
 	public static void main(String[] args) {
 		File directory = new File(".");
-		String OUTPUT_DIR = "/home/cheng/Documents/workspace/MyFlowAnalysis_new/sootoutput/";
+		String OUTPUT_DIR = "/Users/qian/workspace/lego/MyFlowAnalysis_new/sootoutput/";
 		LOG = OUTPUT_DIR + "LOG.log";
 		LOG_DOT = OUTPUT_DIR + "LOG_DOT.log";
 		API_LOCAL_LOG = OUTPUT_DIR + "API_LOCAL_LOG.log";
@@ -242,7 +243,7 @@ public class AnalyzerMain {
 		sootArgs.add("-output-format");
 		sootArgs.add("jimple");
 		sootArgs.add("-process-dir");
-		sootArgs.add("../LineFollower/bin");
+		sootArgs.add("../test/bin");
 		//sootArgs.add("../PetriNet/bin");
 		sootArgs.add("-allow-phantom-refs");
 		sootArgs.add("-w");
@@ -289,6 +290,7 @@ public class AnalyzerMain {
 			System.out.println("Entry point is :" + entry.getName());
 			conditionAnalysis(entry);
 		//}
+		/*  //comments by Qian Feng
 		dataFlowForCondition = false;		
 		Set<String> keySet = sinks.keySet();
 		Iterator<String> iter = keySet.iterator();
@@ -337,6 +339,7 @@ public class AnalyzerMain {
 		//for(int i=0;i<paths.size();i++){
 			constructConditionStmtRep(paths.get(1));
 		//}
+		*/ 
 	}
 	
 	public static void constructConditionStmtRep(List<Stmt> path){
@@ -575,7 +578,7 @@ public class AnalyzerMain {
 			
 			if(!statement.containsInvokeExpr()) continue;
 		
-			List<APIGraphNode> conditionalPredecessors = new ArrayList<APIGraphNode>();
+			List<Predecessor> conditionalPredecessors = new ArrayList<Predecessor>();
 			String apiSig = statement.getInvokeExpr().getMethod().getSignature();
 			
 			if(IsSensitiveAPI(apiSig))
@@ -592,18 +595,20 @@ public class AnalyzerMain {
 				
 				//for every predominators, extract the condition and its value boxes. 
 				//Do backward data flow analysis on each value box (not true, we just do one DFA per predominator)
-				for(APIGraphNode cond : conditionalPredecessors)
+				for(Predecessor cond : conditionalPredecessors)
 				{
-					System.out.println("Condition is :"+cond.getStmt());
-					Stmt condStatement  = cond.getStmt();
+					System.out.println("Condition is :"+cond.pred_node.getStmt());
+					Stmt condStatement  = cond.pred_node.getStmt();
 					Vector<ValueBox> l = new Vector<ValueBox>();
 					if(condStatement instanceof IfStmt)
 					{
-						for(Object v: ((IfStmt)condStatement).getCondition().getUseBoxes())
-						{
-							ValueBox vb = (ValueBox)v;
-							Value value = vb.getValue();
-						}
+						Stmt tar = ((IfStmt)condStatement).getTarget();
+//						for(Object v: ((IfStmt)condStatement).getUnitBoxes())
+//						{
+//							//ValueBox vb = (ValueBox)v;
+//							//Value value = vb.getValue();
+//						}
+//						
 						l.addAll(((IfStmt)condStatement).getCondition().getUseBoxes());
 					}
 					else if(condStatement instanceof TableSwitchStmt)
@@ -624,14 +629,14 @@ public class AnalyzerMain {
 							System.out.println("Analyzing: "+v);
 							dataFlowForCondition = true;
 							INFO_SINK = condStatement.toString();
-							SINK_METHOD = cond.getHostMethod();
+							SINK_METHOD = cond.pred_node.getHostMethod();
 							G.reset();
 							locateSinks();
 							G.reset();
-							String conditionSig = condStatement.toString() + "|" + flowSinkTransformer.sinkSig;
-							conditionalStmtList.add(cond);
-							conditionalStmtToSigMap.put(cond, conditionSig);
-							System.out.println(cond.getStmt()+"========================"+conditionSig);
+							String conditionSig = condStatement.toString() + "|" + flowSinkTransformer.sinkSig + " ### " + String.valueOf(cond.getCondValue()); 
+							conditionalStmtList.add(cond.pred_node);
+							conditionalStmtToSigMap.put(cond.pred_node, conditionSig);
+							System.out.println(cond.pred_node.getStmt()+"========================"+conditionSig);
 							//if(!conditionToDDGMap.containsKey(conditionSig))
 							//{
 							sourcesLocationMap.put(condStatement.toString(), flowSinkTransformer.getClassToMethod());
@@ -691,7 +696,8 @@ public class AnalyzerMain {
 		Iterator it = conditionForAPI.entrySet().iterator();
 	    while (it.hasNext()) {
 	        Map.Entry pair = (Map.Entry)it.next();
-	        System.out.println(pair.getKey() + " = " + pair.getValue());
+	        System.out.println(pair.getKey());
+	        System.out.println(pair.getValue());
 	    }
 		System.out.println("=================conditionToDDGMap==================");
 		it = conditionToDDGMap.entrySet().iterator();
@@ -930,7 +936,7 @@ public class AnalyzerMain {
 		sootArgs.add("-output-format");
 		sootArgs.add("jimple");
 		sootArgs.add("-process-dir");
-		sootArgs.add("../test/bin");
+		sootArgs.add("../LineFollower/bin");
 		sootArgs.add("-allow-phantom-refs");
 		sootArgs.add("-w");
 		String[] soot_args = new String[sootArgs.size()];

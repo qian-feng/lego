@@ -13,8 +13,10 @@ public class APIGraphNode {
 	private String annotation;
 	private Vector<APIGraphNode> successors;
 	private Vector<APIGraphNode> predecessors;
+	private Vector<Predecessor> preds;
 	private APIGraphNode immediateDom;
 	private SootMethod hostMethod;
+
 	
 	public APIGraphNode(Stmt stmt){
 		this.stmt = stmt;
@@ -22,6 +24,7 @@ public class APIGraphNode {
 		this.annotation = "";
 		this.successors = new Vector<APIGraphNode>();
 		this.predecessors = new Vector<APIGraphNode>();
+		this.preds = new Vector<Predecessor>();
 		this.hostMethod = null;
 	}
 	
@@ -31,8 +34,12 @@ public class APIGraphNode {
 		this.annotation = "";
 		this.successors = new Vector<APIGraphNode>();
 		this.predecessors = new Vector<APIGraphNode>();
+		this.preds = new Vector<Predecessor>();
 		this.hostMethod = host;
 	}
+	
+
+	
 	
 	public boolean equal(APIGraphNode node)
 	{
@@ -68,6 +75,7 @@ public class APIGraphNode {
 				
 		return clone;
 	}
+	
 		
 	public Stmt getStmt(){
 		return this.stmt;
@@ -93,6 +101,7 @@ public class APIGraphNode {
 		return this.predecessors;
 	}
 	
+	
 	public void setCallsite(Stmt callsite){
 		this.callsite = callsite;
 	}
@@ -105,7 +114,7 @@ public class APIGraphNode {
 		return this.successors.contains(succ);
 	}
 	
-	public boolean hasSuccRecursive(APIGraphNode succ)
+	public boolean hasSuccRecursive(APIGraphNode succ, APIGraphNode parent)
 	{
 		//this LinkedList stores all the successors
 		LinkedList<APIGraphNode> succAll = new LinkedList<APIGraphNode>();
@@ -118,6 +127,9 @@ public class APIGraphNode {
 		while(!succs.isEmpty())
 		{
 			APIGraphNode currNode = succs.remove();
+			
+			if(currNode.equal(parent))
+				return false;
 			
 			if(currNode.equal(succ))
 				return true;
@@ -166,18 +178,23 @@ public class APIGraphNode {
 	public void addPred(APIGraphNode pred){
 		if(!hasPred(pred)){
 			this.predecessors.add(pred);
+			Predecessor predc = new Predecessor(pred);
+			predc.updateCondValue(this.stmt);
+			this.preds.add(predc);
 		}
 	}
 	
 	public void removePred(APIGraphNode pred){
 		if(hasPred(pred)){
 			this.predecessors.remove(pred);
+			this.preds.remove(getPred(pred));
 		}
 	}
 	
 	public void clearPred()
 	{
 		this.predecessors.clear();
+		this.preds.clear();
 	}
 	
 	public void removeDom(){
@@ -203,5 +220,42 @@ public class APIGraphNode {
 		this.successors.clear();
 		this.successors.addAll(succs);
 	}
+	
+	public Vector<Predecessor> getPreds(){
+		return this.preds;
+	}
+	
+	public boolean hasPred(Predecessor pred){
+		return this.preds.contains(pred);
+	}
+	
+	public void addPred(Predecessor pred){
+		if(!hasPred(pred)){
+			this.preds.add(pred);
+		}
+	}
+	
+	public Predecessor getPred(APIGraphNode node)
+	{
+		for(Predecessor pred: this.preds)
+		{
+			if(pred.pred_node==node)
+				return pred;
+		}
+		return null;
+	}
+	
+	public void removePred(Predecessor pred){
+		if(hasPred(pred)){
+			this.preds.remove(pred);
+		}
+	}
+	
+	public void clearPreds()
+	{
+		this.preds.clear();
+	}
 
 }
+
+

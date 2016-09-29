@@ -369,6 +369,8 @@ public interface MyConstants {
 	
 	public static String[] constParameterAPIList = new String[]
 	{
+		"<test: boolean inBounds(int,int)>",
+		"<test: int get()>",
 		"<android.location.LocationManager: boolean sendExtraCommand(java.lang.String,java.lang.String,android.os.Bundle)>",
         "<android.widget.VideoView: void setVideoPath(java.lang.String)>",
         "<android.media.MediaRecorder: void setOutputFile(java.lang.String)>",
@@ -405,8 +407,12 @@ public interface MyConstants {
 		//"<LineFollower: void turnL(double)>",
 		//"<LineFollower: void turnR(double)>",
 		//Add lejos sensitive API
-			
+		"<test: boolean inBounds(int,int)>",
+		"<test: int get()>",
+		"<test: int get2()>",
 		"<lejos.robotics.EncoderMotor: void setPower(int)>",
+		"<LineFollower: void turnR(double)>",
+		"<LineFollower: void turnL(double)>",
 		"<lejos.robotics.SampleProvider: void fetchSample(float[],int)>",
 		//cell phone info query
 		"<android.telephony.TelephonyManager: java.lang.String getSubscriberId()>",
