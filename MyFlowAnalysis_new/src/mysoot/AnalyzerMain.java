@@ -531,7 +531,7 @@ public class AnalyzerMain {
 		((IfStmt)condition).setTarget(sinkStmt);
 		System.err.println("New condition Stmt is: "+condition.toString());
 		String finalStr = null;
-		boolean check = conditionTarget.hasSuccRecursive(sinkNode);
+		boolean check = conditionTarget.hasSuccRecursive(sinkNode, null);
 		System.err.println(conditionTarget.getStmt().toString()+"::"+sinkNode.getStmt().toString());
 		if(check) {
 			//Branch is taken. No negation, just do variable substitutions
@@ -828,7 +828,7 @@ public class AnalyzerMain {
 				Vector<APIGraphNode> succs = cond.getSuccessors();
 				for(APIGraphNode succ: succs)
 				{
-					if(succ.hasSuccRecursive(node))
+					if(succ.hasSuccRecursive(node, cond))
 					{
 						int low = ((TableSwitchStmt) condStmt).getLowIndex();
 						int high = ((TableSwitchStmt) condStmt).getHighIndex();
@@ -852,7 +852,7 @@ public class AnalyzerMain {
 				Vector<APIGraphNode> succs = cond.getSuccessors();
 				for(APIGraphNode succ: succs)
 				{
-					if(succ.hasSuccRecursive(node))
+					if(succ.hasSuccRecursive(node, cond))
 					{
 						@SuppressWarnings("unchecked")
 						List<IntConstant> values = ((LookupSwitchStmt) condStmt).getLookupValues();
@@ -961,7 +961,7 @@ public class AnalyzerMain {
 		sootArgs.add("-output-format");
 		sootArgs.add("jimple");
 		sootArgs.add("-process-dir");
-		sootArgs.add("../LineFollower/bin");
+		sootArgs.add("../LineFollower/bin");		
 		sootArgs.add("-allow-phantom-refs");
 		// sootArgs.add("-w");
 		sootArgs.add("-O");
@@ -989,7 +989,7 @@ public class AnalyzerMain {
 		sootArgs.add("-output-format");
 		sootArgs.add("jimple");
 		sootArgs.add("-process-dir");
-		sootArgs.add("../LineFollower/bin");
+		sootArgs.add("../LineFollower/bin");		
 		sootArgs.add("-allow-phantom-refs");
 
 		String[] soot_args = new String[sootArgs.size()];
@@ -1123,6 +1123,8 @@ public class AnalyzerMain {
 		for (int i = 0; i < sootArgs.size(); i++) {
 			soot_args[i] = sootArgs.get(i);
 		}
+		// each time when wen use soot.Main.main(soot_args) to analyze project, we need to 
+		// provide correct project location: "../test/bin" in this example
 		soot.Main.main(soot_args);
 	}
 

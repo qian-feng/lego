@@ -92,10 +92,15 @@ public class AndroidSourceSinkSummary{
 	
 	public static void buildSourceSummary(){		
 		List<Integer> sourceIndexes = null;
-		//lejos fetch sample
+		// add source API here
+		// sourceIndexes.add(ret) means we are interested in dataflow information related to return value of this function
 		sourceIndexes = new ArrayList<Integer>();
-		sourceIndexes.add(param0);
-		sourceSummary.put("<lejos.robotics.SampleProvider: void fetchSample(float[],int)>", sourceIndexes);
+		sourceIndexes.add(ret);
+		sourceSummary.put("<test: int get()>", sourceIndexes);
+		//lejos fetch sample
+		//sourceIndexes.add(param0);
+		//sourceSummary.put("<lejos.robotics.SampleProvider: void fetchSample(float[],int)>", sourceIndexes);
+		
 	}
 	
 	public static void buildTestCallbackSourceSummary(){	
@@ -317,7 +322,13 @@ public class AndroidSourceSinkSummary{
 
 		//lejos setpower
 		sinkIndexes = new ArrayList<Integer>();
+		//sinkIndexes.add(param0);
+		//sinkSummary.put("<lejos.robotics.EncoderMotor: void setPower(int)>", sinkIndexes);
+		// Add sink API information here
+		// sinkIndexes.add(param0), sinkIndexes.add(param1) means that we are interested in the 1st and 2nd param in SINK API
+		// And proper dataflow information regarding to these two params will be extracted in result
 		sinkIndexes.add(param0);
-		sinkSummary.put("<lejos.robotics.EncoderMotor: void setPower(int)>", sinkIndexes);
+		sinkIndexes.add(param1);
+		sinkSummary.put("<test: boolean inBounds(int,int)>", sinkIndexes);
 	}
 }

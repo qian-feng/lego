@@ -409,7 +409,7 @@ public interface MyConstants {
 		//Add lejos sensitive API
 		"<test: boolean inBounds(int,int)>",
 		"<test: int get()>",
-		"<test: int get2()>",
+		"<test: int get2()>",		
 		"<lejos.robotics.EncoderMotor: void setPower(int)>",
 		"<LineFollower: void turnR(double)>",
 		"<LineFollower: void turnL(double)>",
